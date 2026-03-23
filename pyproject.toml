@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyfuzz"
+version = "0.1.0"
+authors = [
+  { name="Xavier Lesa", email="xavier.lesa@gmail.com" },
+]
+description = "A fuzzing utility for Python"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "requests",
+]
+[project.urls]
+"Homepage" = "https://github.com/xavierlesa/pyfuzz"
+"Bug Tracker" = "https://github.com/xavierlesa/pyfuzz/issues"
+
+[project.scripts]
+pyfuzz = "pyfuzz.cli:cli"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pyfuzz = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pyfuzz.__version__"}

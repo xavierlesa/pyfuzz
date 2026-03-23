@@ -18,7 +18,8 @@ banner = (
     "\033[38;5;166m██████╔╝ ╚████╔╝ █████╗  ██║   ██║  ███╔╝   ███╔╝ \n"
     "\033[38;5;166m██╔═══╝   ╚██╔╝  ██╔══╝  ██║   ██║ ███╔╝   ███╔╝  \n"
     "\033[38;5;130m██║        ██║   ██║     ╚██████╔╝███████╗███████╗\n"
-    "\033[38;5;130m╚═╝        ╚═╝   ╚═╝      ╚═════╝ ╚══════╝╚══════╝"
+    "\033[38;5;130m╚═╝        ╚═╝   ╚═╝      ╚═════╝ ╚══════╝╚══════╝\n"
+    "\033[0m\n\nAutor: Xavier Lesa\nhttps://github.com/xavierlesa/pyfuzz"
     "\033[0m"
 )
 
@@ -29,7 +30,7 @@ def pyfuzz():
     parser.add_argument(
         "-w",
         "--wordlist",
-        nargs="+",
+        action="append",
         help="Path al(los) archivo(s) de wordlist. Ej ./wordlist.txt ./fuzz.txt. La lista final es la unión de todos los archivos y palabras únicas.",
     )
     parser.add_argument(
@@ -67,18 +68,13 @@ def pyfuzz():
     # A esta lista se le aplica un start si hay.
     unique_words = set()
 
-    with fileinput.input(wordlist) as file:
-        for line in file:
-            unique_words.add(line.strip())
-
-    # for f in wordlist:
-    #     if f == "-":
-    #         for line in fileinput.input('-'):
-    #             unique_words.add(line.strip())
-    #         continue
-    #     with open(f) as file:
-    #         for line in file:
-    #             unique_words.add(line.strip())
+    try:
+        with fileinput.input(wordlist) as file:
+            for line in file:
+                unique_words.add(line.strip())
+    except FileNotFoundError as e:
+        print(f"{C_YELLOW}No se encontró el wordlist \"{e.filename}\"{NO_FORMAT}")
+        return
 
     print(f"Fuzzing sobre {C_LIME}{len(unique_words)}{NO_FORMAT} words...")
 
@@ -108,7 +104,7 @@ def pyfuzz():
             print(f"{F_BOLD}{C_LIME}[match]{NO_FORMAT} {url} {response.status_code}")
 
 
-if __name__ == "__main__":
+def cli():
     print(banner)
     print()
     try:
@@ -116,3 +112,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print(f"{F_BOLD}{C_ORANGE}Kill!{NO_FORMAT}")
         sys.exit(0)
+
+
+if __name__ == "__main__":
+    cli()
